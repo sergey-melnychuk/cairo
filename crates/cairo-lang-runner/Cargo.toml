@@ -21,6 +21,7 @@ cairo-lang-sierra-type-size = { path = "../cairo-lang-sierra-type-size", version
 cairo-lang-starknet = { path = "../cairo-lang-starknet", version = "~2.7.0" }
 cairo-lang-utils = { path = "../cairo-lang-utils", version = "~2.7.0" }
 cairo-vm.workspace = true
+hashbrown.workspace = true
 itertools = { workspace = true, default-features = true }
 keccak.workspace = true
 num-bigint = { workspace = true, default-features = true }

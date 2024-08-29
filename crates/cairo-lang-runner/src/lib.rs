@@ -77,8 +77,14 @@ pub enum RunnerError {
     SierraCompilationError(#[from] Box<CompilationError>),
     #[error(transparent)]
     ApChangeError(#[from] ApChangeError),
-    #[error(transparent)]
-    CairoRunError(#[from] Box<CairoRunError>),
+    #[error("cairo run error: {0}")]
+    CairoRunError(Box<CairoRunError>),
+}
+
+impl From<Box<CairoRunError>> for RunnerError {
+    fn from(error: Box<CairoRunError>) -> Self {
+        Self::CairoRunError(error)
+    }
 }
 
 /// The full result of a run with Starknet state.
@@ -166,9 +172,9 @@ impl From<Felt252> for Arg {
 /// Builds hints_dict required in cairo_vm::types::program::Program from instructions.
 pub fn build_hints_dict<'b>(
     instructions: impl Iterator<Item = &'b Instruction>,
-) -> (HashMap<usize, Vec<HintParams>>, HashMap<String, Hint>) {
-    let mut hints_dict: HashMap<usize, Vec<HintParams>> = HashMap::new();
-    let mut string_to_hint: HashMap<String, Hint> = HashMap::new();
+) -> (hashbrown::HashMap<usize, Vec<HintParams>>, hashbrown::HashMap<String, Hint>) {
+    let mut hints_dict: hashbrown::HashMap<usize, Vec<HintParams>> = hashbrown::HashMap::new();
+    let mut string_to_hint: hashbrown::HashMap<String, Hint> = hashbrown::HashMap::new();
 
     let mut hint_offset = 0;
 
@@ -437,7 +443,7 @@ impl SierraCasmRunner {
         &self,
         func: &Function,
         hint_processor: &mut dyn HintProcessor,
-        hints_dict: HashMap<usize, Vec<HintParams>>,
+        hints_dict: hashbrown::HashMap<usize, Vec<HintParams>>,
         bytecode: Bytecode,
         builtins: Vec<BuiltinName>,
     ) -> Result<RunResult, RunnerError>
