@@ -1,5 +1,11 @@
 //! Basic runner for running a Sierra program on the vm.
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
+
+#[cfg(feature = "cairo-vm-std")]
+use std::collections::HashMap;
+#[cfg(not(feature = "cairo-vm-std"))]
+use hashbrown::HashMap;
+
 use std::ops::{Add, Sub};
 
 use cairo_lang_casm::hints::Hint;
@@ -172,9 +178,9 @@ impl From<Felt252> for Arg {
 /// Builds hints_dict required in cairo_vm::types::program::Program from instructions.
 pub fn build_hints_dict<'b>(
     instructions: impl Iterator<Item = &'b Instruction>,
-) -> (hashbrown::HashMap<usize, Vec<HintParams>>, hashbrown::HashMap<String, Hint>) {
-    let mut hints_dict: hashbrown::HashMap<usize, Vec<HintParams>> = hashbrown::HashMap::new();
-    let mut string_to_hint: hashbrown::HashMap<String, Hint> = hashbrown::HashMap::new();
+) -> (HashMap<usize, Vec<HintParams>>, HashMap<String, Hint>) {
+    let mut hints_dict: HashMap<usize, Vec<HintParams>> = HashMap::new();
+    let mut string_to_hint: HashMap<String, Hint> = HashMap::new();
 
     let mut hint_offset = 0;
 
@@ -443,7 +449,7 @@ impl SierraCasmRunner {
         &self,
         func: &Function,
         hint_processor: &mut dyn HintProcessor,
-        hints_dict: hashbrown::HashMap<usize, Vec<HintParams>>,
+        hints_dict: HashMap<usize, Vec<HintParams>>,
         bytecode: Bytecode,
         builtins: Vec<BuiltinName>,
     ) -> Result<RunResult, RunnerError>

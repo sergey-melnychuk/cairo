@@ -1,6 +1,12 @@
 use std::any::Any;
 use std::borrow::Cow;
-use std::collections::{HashMap, VecDeque};
+use std::collections::VecDeque;
+
+#[cfg(feature = "cairo-vm-std")]
+use std::collections::HashMap;
+#[cfg(not(feature = "cairo-vm-std"))]
+use hashbrown::HashMap;
+
 use std::ops::{Shl, Sub};
 use std::vec::IntoIter;
 
@@ -61,7 +67,7 @@ pub fn hint_to_hint_params(hint: &Hint) -> HintParams {
         accessible_scopes: vec![],
         flow_tracking_data: FlowTrackingData {
             ap_tracking: ApTracking::new(),
-            reference_ids: hashbrown::HashMap::new(),
+            reference_ids: HashMap::new(),
         },
     }
 }
@@ -87,7 +93,7 @@ pub struct CairoHintProcessor<'a> {
     /// The Cairo runner.
     pub runner: Option<&'a SierraCasmRunner>,
     /// A mapping from a string that represents a hint to the hint object.
-    pub string_to_hint: hashbrown::HashMap<String, Hint>,
+    pub string_to_hint: HashMap<String, Hint>,
     /// The starknet state.
     pub starknet_state: StarknetState,
     /// Maintains the resources of the run.
@@ -403,7 +409,7 @@ impl HintProcessorLogic for CairoHintProcessor<'_> {
         vm: &mut VirtualMachine,
         exec_scopes: &mut ExecutionScopes,
         hint_data: &Box<dyn Any>,
-        _constants: &hashbrown::HashMap<String, Felt252>,
+        _constants: &HashMap<String, Felt252>,
     ) -> Result<(), HintError> {
         let hint = hint_data.downcast_ref::<Hint>().unwrap();
         let hint = match hint {
@@ -440,7 +446,7 @@ impl HintProcessorLogic for CairoHintProcessor<'_> {
         &self,
         hint_code: &str,
         _ap_tracking_data: &ApTracking,
-        _reference_ids: &hashbrown::HashMap<String, usize>,
+        _reference_ids: &HashMap<String, usize>,
         _references: &[HintReference],
     ) -> Result<Box<dyn Any>, VirtualMachineError> {
         Ok(Box::new(self.string_to_hint[hint_code].clone()))
@@ -2185,7 +2191,7 @@ pub fn run_function_with_runner(
 pub fn build_cairo_runner(
     data: Vec<MaybeRelocatable>,
     builtins: Vec<BuiltinName>,
-    hints_dict: hashbrown::HashMap<usize, Vec<HintParams>>,
+    hints_dict: HashMap<usize, Vec<HintParams>>,
 ) -> Result<CairoRunner, Box<CairoRunError>> {
     let program = Program::new(
         builtins,
@@ -2193,7 +2199,7 @@ pub fn build_cairo_runner(
         Some(0),
         hints_dict,
         ReferenceManager { references: Vec::new() },
-        hashbrown::HashMap::new(),
+        HashMap::new(),
         vec![],
         None,
     )
@@ -2224,7 +2230,7 @@ pub fn run_function<'a, 'b: 'a>(
         context: RunFunctionContext<'_>,
     ) -> Result<(), Box<CairoRunError>>,
     hint_processor: &mut dyn HintProcessor,
-    hints_dict: hashbrown::HashMap<usize, Vec<HintParams>>,
+    hints_dict: HashMap<usize, Vec<HintParams>>,
 ) -> Result<RunFunctionResult, Box<CairoRunError>> {
     let data: Vec<MaybeRelocatable> =
         bytecode.map(Felt252::from).map(MaybeRelocatable::from).collect();
