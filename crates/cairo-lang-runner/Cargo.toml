@@ -6,6 +6,9 @@ repository.workspace = true
 license-file.workspace = true
 description = "Basic cairo runner."
 
+[features]
+cairo-vm-std = ["cairo-vm/std"]
+
 [dependencies]
 ark-ff.workspace = true
 ark-secp256k1.workspace = true
@@ -20,7 +23,8 @@ cairo-lang-sierra-to-casm = { path = "../cairo-lang-sierra-to-casm", version = "
 cairo-lang-sierra-type-size = { path = "../cairo-lang-sierra-type-size", version = "~2.7.0" }
 cairo-lang-starknet = { path = "../cairo-lang-starknet", version = "~2.7.0" }
 cairo-lang-utils = { path = "../cairo-lang-utils", version = "~2.7.0" }
-cairo-vm.workspace = true
+#cairo-vm.workspace = true
+cairo-vm = { version = "1.0.0-rc6", git = "https://github.com/sergey-melnychuk/cairo-vm", branch = "beerus-wasm", default-features = false, features = ["mod_builtin"]}
 hashbrown.workspace = true
 itertools = { workspace = true, default-features = true }
 keccak.workspace = true
