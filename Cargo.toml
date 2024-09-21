@@ -85,8 +85,6 @@ ark-secp256r1 = "0.4.0"
 ark-std = "0.4.0"
 assert_matches = "1.5"
 bimap = "0.6.3"
-#cairo-vm = { version = "1.0.0-rc6", features = ["mod_builtin"]}
-cairo-vm = { version = "1.0.0-rc6", git = "https://github.com/sergey-melnychuk/cairo-vm", branch = "beerus-wasm", default-features = false, features = ["mod_builtin"]}
 clap = { version = "4.5.4", features = ["derive"] }
 colored = "2.1.0"
 const-fnv1a-hash = "1.1.0"
@@ -149,3 +147,10 @@ unescaper = "0.1.2"
 xshell = "0.2.6"
 
 openssl = { version = "0.10.35" }
+
+[workspace.dependencies.cairo-vm]
+git = "https://github.com/sergey-melnychuk/cairo-vm"
+tag = "beerus-wasm-2024-09-21"
+version = "1.0.0-rc6"
+default-features = false
+features = ["mod_builtin"]

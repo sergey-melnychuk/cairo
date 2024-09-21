@@ -124,6 +124,11 @@ impl Felt252Serde for usize {
     }
 
     fn deserialize(input: &[BigUintAsHex]) -> Result<(Self, &[BigUintAsHex]), Felt252SerdeError> {
+        // TODO: HERE size_of::<usize> is 4 in wasm (not 8, as in x86_64)
+        println!("TODO: HERE Felt252Serde::deserialize::<usize>: input[0]={:?}", input[0]);
+        #[cfg(target_arch = "wasm32")]
+        web_sys::console::log_1(&format!("TODO:HERE Felt252Serde::deserialize::<usize>: input[0]={:?}", input[0]).into());
+
         let head = input
             .first()
             .and_then(|size| size.value.to_usize())

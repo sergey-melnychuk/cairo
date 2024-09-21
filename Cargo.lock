@@ -997,6 +997,7 @@ dependencies = [
  "test-case",
  "test-log",
  "thiserror",
+ "web-sys",
 ]
 
 [[package]]
@@ -1141,7 +1142,7 @@ dependencies = [
 [[package]]
 name = "cairo-vm"
 version = "1.0.1"
-source = "git+https://github.com/sergey-melnychuk/cairo-vm?branch=beerus-wasm#9c60233d84a976e0e28b6b8eda1638ed89ed784a"
+source = "git+https://github.com/sergey-melnychuk/cairo-vm?tag=beerus-wasm-2024-09-21#6568bda381f6127d9342c2f7448a54089f8f7f38"
 dependencies = [
  "anyhow",
  "bincode",

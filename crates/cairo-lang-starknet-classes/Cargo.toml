@@ -24,6 +24,11 @@ smol_str.workspace = true
 starknet-types-core.workspace = true
 thiserror.workspace = true
 
+## TODO: necessary to debug the bigint/usize issue in wasm
+## Search for 'TODO: HERE' for a specific places in the code
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+web-sys = "0.3.69"
+
 [dev-dependencies]
 cairo-lang-sierra-generator = { path = "../cairo-lang-sierra-generator" }
 cairo-lang-test-utils = { path = "../cairo-lang-test-utils", features = ["testing"] }
