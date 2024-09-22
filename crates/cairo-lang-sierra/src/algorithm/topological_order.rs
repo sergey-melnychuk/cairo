@@ -59,17 +59,17 @@ fn calculate_topological_ordering<E>(
     let mut stack = vec![root];
 
     while let Some(idx) = stack.pop() {
-        match status.get(idx.0) {
+        match status.get(idx.0 as usize) {
             Some(TopologicalOrderStatus::NotStarted) => {
                 // Mark the statement as `InProgress`.
-                status[idx.0] = TopologicalOrderStatus::InProgress;
+                status[idx.0 as usize] = TopologicalOrderStatus::InProgress;
 
                 // Push the statement back to the stack, so that after visiting all
                 // of its children, we would add it to the ordering.
                 // Add the missing children on top of it.
                 stack.push(idx);
                 for child in get_children(idx)? {
-                    match status.get(child.0) {
+                    match status.get(child.0 as usize) {
                         Some(TopologicalOrderStatus::InProgress) => {
                             if detect_cycles {
                                 return Err(cycle_err(child));
@@ -90,7 +90,7 @@ fn calculate_topological_ordering<E>(
             }
             Some(TopologicalOrderStatus::InProgress) => {
                 // Mark the statement as `Done`.
-                status[idx.0] = TopologicalOrderStatus::Done;
+                status[idx.0 as usize] = TopologicalOrderStatus::Done;
 
                 // Add the element to the ordering after visiting all its children.
                 // This gives us reverse topological ordering.

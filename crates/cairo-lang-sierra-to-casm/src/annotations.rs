@@ -181,8 +181,8 @@ impl ProgramAnnotations {
         annotations: StatementAnnotations,
     ) -> Result<(), AnnotationError> {
         let idx = statement_idx.0;
-        match self.per_statement_annotations.get(idx).ok_or(AnnotationError::InvalidStatementIdx)? {
-            None => self.per_statement_annotations[idx] = Some(annotations),
+        match self.per_statement_annotations.get(idx as usize).ok_or(AnnotationError::InvalidStatementIdx)? {
+            None => self.per_statement_annotations[idx as usize] = Some(annotations),
             Some(expected_annotations) => {
                 if expected_annotations.function_id != annotations.function_id {
                     return Err(AnnotationError::InconsistentFunctionId { statement_idx });
@@ -265,7 +265,7 @@ impl ProgramAnnotations {
         statement_idx: StatementIdx,
         ref_ids: impl Iterator<Item = &'a VarId>,
     ) -> Result<(StatementAnnotations, Vec<ReferenceValue>), AnnotationError> {
-        let existing = self.per_statement_annotations[statement_idx.0]
+        let existing = self.per_statement_annotations[statement_idx.0 as usize]
             .as_mut()
             .ok_or(AnnotationError::MissingAnnotationsForStatement(statement_idx))?;
         let mut updated = if self.backwards_jump_indices.contains(&statement_idx) {
@@ -304,7 +304,7 @@ impl ProgramAnnotations {
         branch_changes: BranchChanges,
         must_set: bool,
     ) -> Result<(), AnnotationError> {
-        if must_set && self.per_statement_annotations[destination_statement_idx.0].is_some() {
+        if must_set && self.per_statement_annotations[destination_statement_idx.0 as usize].is_some() {
             return Err(AnnotationError::AnnotationAlreadySet {
                 source_statement_idx,
                 destination_statement_idx,

@@ -36,7 +36,7 @@ impl Relocation {
         instruction: &mut Instruction,
     ) {
         let target_pc = match self {
-            Relocation::RelativeStatementId(statement_idx) => statement_offsets[statement_idx.0],
+            Relocation::RelativeStatementId(statement_idx) => statement_offsets[statement_idx.0 as usize],
             Relocation::SegmentStart(segment_index) => {
                 let segment = consts_info.segments.get(segment_index).expect("Segment not found.");
                 *statement_offsets.last().unwrap() + segment.segment_offset

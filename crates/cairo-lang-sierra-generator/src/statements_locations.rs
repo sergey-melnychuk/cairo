@@ -168,7 +168,7 @@ impl StatementsLocations {
         let mut locations = UnorderedHashMap::default();
         for (idx, stmt_locations) in locations_vec.iter().enumerate() {
             if !stmt_locations.is_empty() {
-                locations.insert(StatementIdx(idx), stmt_locations.clone());
+                locations.insert(StatementIdx(idx as u64), stmt_locations.clone());
             }
         }
         Self { locations }

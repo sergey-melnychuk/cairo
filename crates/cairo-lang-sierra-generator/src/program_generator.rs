@@ -195,13 +195,13 @@ impl DebugWithDb<dyn SierraGenGroup> for SierraProgramWithDebug {
             let end = funcs
                 .peek()
                 .map(|f| f.entry_point.0)
-                .unwrap_or_else(|| sierra_program.statements.len());
+                .unwrap_or_else(|| sierra_program.statements.len() as u64);
             writeln!(f, "// {}:", func.id)?;
             for param in &func.params {
                 writeln!(f, "//   {}", param)?;
             }
             for i in start..end {
-                writeln!(f, "{}; // {i}", sierra_program.statements[i])?;
+                writeln!(f, "{}; // {i}", sierra_program.statements[i as usize])?;
                 if let Some(loc) =
                     &self.debug_info.statements_locations.locations.get(&StatementIdx(i))
                 {

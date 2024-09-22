@@ -159,7 +159,7 @@ impl<TType: GenericType, TLibfunc: GenericLibfunc> ProgramRegistry<TType, TLibfu
         let mut branches: HashMap<StatementIdx, StatementIdx> =
             HashMap::<StatementIdx, StatementIdx>::default();
         for (i, statement) in program.statements.iter().enumerate() {
-            self.validate_statement(program, StatementIdx(i), statement, &mut branches)?;
+            self.validate_statement(program, StatementIdx(i as u64), statement, &mut branches)?;
         }
         Ok(())
     }
@@ -214,7 +214,7 @@ impl<TType: GenericType, TLibfunc: GenericLibfunc> ProgramRegistry<TType, TLibfu
                 }
             }
             let next = index.next(&invocation_branch.target);
-            if next.0 >= program.statements.len() {
+            if next.0 as usize >= program.statements.len() {
                 return Err(Box::new(ProgramRegistryError::JumpOutOfRange(index)));
             }
             if libfunc_branches.len() > 1 {

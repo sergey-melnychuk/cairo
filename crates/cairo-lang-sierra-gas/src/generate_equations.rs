@@ -75,7 +75,7 @@ impl EquationGenerator {
 
     /// Sets some future or adds a matching equation if already set.
     fn set_or_add_constraint(&mut self, idx: &StatementIdx, cost: CostExprMap) {
-        let entry = &mut self.future_costs[idx.0];
+        let entry = &mut self.future_costs[idx.0 as usize];
         if let Some(other) = entry {
             for (token_type, val) in sub_maps(other.clone(), cost) {
                 self.equations[&token_type].push(val);
@@ -89,7 +89,7 @@ impl StatementFutureCost for EquationGenerator {
     /// Returns the future cost starting from a statement, will additionally make sure this
     /// statement actually exists.
     fn get_future_cost(&mut self, idx: &StatementIdx) -> &CostExprMap {
-        let entry = &mut self.future_costs[idx.0];
+        let entry = &mut self.future_costs[idx.0 as usize];
         if let Some(other) = entry {
             other
         } else {

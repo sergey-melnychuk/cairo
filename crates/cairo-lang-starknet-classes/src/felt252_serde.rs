@@ -124,11 +124,6 @@ impl Felt252Serde for usize {
     }
 
     fn deserialize(input: &[BigUintAsHex]) -> Result<(Self, &[BigUintAsHex]), Felt252SerdeError> {
-        // TODO: HERE size_of::<usize> is 4 in wasm (not 8, as in x86_64)
-        println!("TODO: HERE Felt252Serde::deserialize::<usize>: input[0]={:?}", input[0]);
-        #[cfg(target_arch = "wasm32")]
-        web_sys::console::log_1(&format!("TODO:HERE Felt252Serde::deserialize::<usize>: input[0]={:?}", input[0]).into());
-
         let head = input
             .first()
             .and_then(|size| size.value.to_usize())
@@ -194,7 +189,7 @@ impl Felt252Serde for StatementIdx {
         self.0.serialize(output)
     }
     fn deserialize(input: &[BigUintAsHex]) -> Result<(Self, &[BigUintAsHex]), Felt252SerdeError> {
-        let (value, input) = usize::deserialize(input)?;
+        let (value, input) = u64::deserialize(input)?;
         Ok((Self(value), input))
     }
 }
@@ -654,15 +649,15 @@ impl Felt252Serde for GenericArg {
 impl Felt252Serde for BranchTarget {
     fn serialize(&self, output: &mut Vec<BigUintAsHex>) -> Result<(), Felt252SerdeError> {
         match self {
-            Self::Fallthrough => usize::MAX.serialize(output),
+            Self::Fallthrough => u64::MAX.serialize(output),
             Self::Statement(idx) => idx.serialize(output),
         }
     }
 
     fn deserialize(input: &[BigUintAsHex]) -> Result<(Self, &[BigUintAsHex]), Felt252SerdeError> {
-        let (idx, input) = usize::deserialize(input)?;
+        let (idx, input) = u64::deserialize(input)?;
         Ok((
-            if idx == usize::MAX { Self::Fallthrough } else { Self::Statement(StatementIdx(idx)) },
+            if idx == u64::MAX { Self::Fallthrough } else { Self::Statement(StatementIdx(idx)) },
             input,
         ))
     }

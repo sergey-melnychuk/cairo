@@ -128,7 +128,7 @@ pub fn calc_gas_precost_info(
         if is_withdraw_gas || is_refund {
             for token in CostTokenType::iter_precost() {
                 // Check that the variable was not assigned a value, and set it to zero.
-                assert_eq!(info.variable_values.insert((StatementIdx(i), *token), 0), None);
+                assert_eq!(info.variable_values.insert((StatementIdx(i as u64), *token), 0), None);
             }
         }
     }
@@ -229,7 +229,7 @@ pub fn calc_gas_postcost_info<ApChangeVarValue: Fn(StatementIdx) -> usize>(
         if is_refund {
             // Check that the variable was not assigned a value, and set it to zero.
             assert_eq!(
-                info.variable_values.insert((StatementIdx(i), CostTokenType::Const), 0),
+                info.variable_values.insert((StatementIdx(i as u64), CostTokenType::Const), 0),
                 None
             );
         }

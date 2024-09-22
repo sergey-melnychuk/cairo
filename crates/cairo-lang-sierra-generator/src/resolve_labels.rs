@@ -92,6 +92,6 @@ impl LabelReplacer {
 
     /// Resolves the given pre-sierra label, and returns [program::StatementIdx].
     pub fn handle_label_id(&self, label_id: pre_sierra::LabelId) -> program::StatementIdx {
-        program::StatementIdx(self.next_statement_index_fetch.resolve_label(&label_id))
+        program::StatementIdx(self.next_statement_index_fetch.resolve_label(&label_id) as u64)
     }
 }

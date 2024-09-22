@@ -13,12 +13,12 @@ use crate::CostError;
 
 /// Returns a cost expression for a statement future variable.
 fn future_statement_cost(idx: usize) -> CostExpr {
-    CostExpr::from_var(Var::StatementFuture(StatementIdx(idx), CostTokenType::Const))
+    CostExpr::from_var(Var::StatementFuture(StatementIdx(idx as u64), CostTokenType::Const))
 }
 
 /// Returns a cost expression for a libfunc variable.
 fn libfunc_cost(idx: usize) -> CostExpr {
-    CostExpr::from_var(Var::LibfuncImplicitGasVariable(StatementIdx(idx), CostTokenType::Const))
+    CostExpr::from_var(Var::LibfuncImplicitGasVariable(StatementIdx(idx as u64), CostTokenType::Const))
 }
 
 #[test_case(indoc! {"
@@ -132,6 +132,6 @@ fn test_reverse_topological_ordering() {
 "};
     let program = cairo_lang_sierra::ProgramParser::new().parse(code).unwrap();
     let ordering: Vec<usize> =
-        get_reverse_topological_ordering(&program).unwrap().into_iter().map(|x| x.0).collect();
+        get_reverse_topological_ordering(&program).unwrap().into_iter().map(|x| x.0 as usize).collect();
     assert_eq!(ordering, vec![4, 2, 6, 0]);
 }

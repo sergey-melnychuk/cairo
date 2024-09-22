@@ -151,7 +151,7 @@ pub fn compute_costs<
         analyze_gas_statements(
             &context,
             specific_cost_context,
-            &StatementIdx(i),
+            &StatementIdx(i as u64),
             &mut variable_values,
         )?;
     }
@@ -551,7 +551,7 @@ impl<'a, CostType: CostTypeTrait> CostContext<'a, CostType> {
         // Compute the target value for each statement by adding the excess to the wallet value.
         Ok((0..self.program.statements.len())
             .map(|i| {
-                let idx = StatementIdx(i);
+                let idx = StatementIdx(i as u64);
                 let original_wallet_value = self.wallet_at_ex(&idx, false).value;
                 (idx, original_wallet_value + excess.get(&idx).cloned().unwrap_or_default())
             })
@@ -678,7 +678,7 @@ fn compute_topological_order(
 ) -> Result<Vec<StatementIdx>, CostError> {
     get_topological_ordering(
         detect_cycles,
-        (0..n_statements).map(StatementIdx),
+        (0..n_statements).map(|x| StatementIdx(x as u64)),
         n_statements,
         |idx| Ok(dependencies_callback(&idx)),
         CostError::StatementOutOfBounds,

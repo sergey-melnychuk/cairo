@@ -516,7 +516,7 @@ impl CasmContractClass {
             let code_offset = cairo_program
                 .debug_info
                 .sierra_statement_info
-                .get(statement_id.0)
+                .get(statement_id.0 as usize)
                 .ok_or(StarknetSierraCompilationError::EntryPointError)?
                 .start_offset;
             assert_eq!(

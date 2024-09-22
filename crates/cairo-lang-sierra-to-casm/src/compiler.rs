@@ -442,7 +442,7 @@ pub fn compile(
         if let Statement::Invocation(invocation) = statement {
             for branch in &invocation.branches {
                 if let BranchTarget::Statement(target) = branch.target {
-                    if target.0 < statement_id {
+                    if target.0 < statement_id as u64 {
                         backwards_jump_indices.insert(target);
                     }
                 }
@@ -464,7 +464,7 @@ pub fn compile(
 
     let mut program_offset: usize = 0;
     for (statement_id, statement) in program.statements.iter().enumerate() {
-        let statement_idx = StatementIdx(statement_id);
+        let statement_idx = StatementIdx(statement_id as u64);
 
         if program_offset > config.max_bytecode_size {
             return Err(Box::new(CompilationError::CodeSizeLimitExceeded));
@@ -596,7 +596,7 @@ pub fn compile(
                     if branching_libfunc
                         && !is_branch_align(
                             &registry,
-                            &program.statements[destination_statement_idx.0],
+                            &program.statements[destination_statement_idx.0 as usize],
                         )?
                     {
                         return Err(Box::new(CompilationError::ExpectedBranchAlign {

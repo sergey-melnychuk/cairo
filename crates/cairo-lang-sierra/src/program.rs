@@ -127,7 +127,7 @@ pub struct Program {
 }
 impl Program {
     pub fn get_statement(&self, id: &StatementIdx) -> Option<&Statement> {
-        self.statements.get(id.0)
+        self.statements.get(id.0 as usize)
     }
 
     /// Create a new [`ProgramArtifact`] out of this [`Program`].
@@ -234,7 +234,12 @@ pub struct Param {
 
 /// Represents the index of a Sierra statement in the Program::statements vector.
 #[derive(Clone, Copy, Debug, Eq, Hash, PartialEq, Serialize, Deserialize, PartialOrd, Ord)]
-pub struct StatementIdx(pub usize);
+pub struct StatementIdx(
+    // `usize` has platform-specific size (by definition), thus fallback to `u64`
+    // here is necessary to make sure program parsing works for wasm32 targets
+    pub u64
+);
+
 impl StatementIdx {
     pub fn next(&self, target: &BranchTarget) -> StatementIdx {
         match target {

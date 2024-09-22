@@ -57,7 +57,7 @@ pub fn compute_bytecode_segment_lengths(
 fn find_functions_segments(program: &Program) -> Result<Vec<usize>, SegmentationError> {
     // Get the set of function entry points.
     let mut function_statement_ids: Vec<usize> =
-        program.funcs.iter().map(|func| func.entry_point.0).collect();
+        program.funcs.iter().map(|func| func.entry_point.0 as usize).collect();
     function_statement_ids.sort();
     require(matches!(function_statement_ids.first(), Some(0)))
         .ok_or(SegmentationError::NoFunctionStartAtZero)?;
@@ -148,7 +148,7 @@ impl FunctionInfo {
         // Check that we did not see a jump after the function's end.
         if self.max_jump_in_function >= function_end {
             return Err(SegmentationError::JumpOutsideFunction(StatementIdx(
-                self.max_jump_in_function_src,
+                self.max_jump_in_function_src as u64,
             )));
         }
         Ok(())
@@ -163,12 +163,12 @@ impl FunctionInfo {
         match statement {
             Statement::Invocation(invocation) => {
                 for branch in invocation.branches.iter() {
-                    let next_statement_idx = StatementIdx(idx).next(&branch.target).0;
-                    if next_statement_idx < self.entry_point {
-                        return Err(SegmentationError::JumpOutsideFunction(StatementIdx(idx)));
+                    let next_statement_idx = StatementIdx(idx as u64).next(&branch.target).0;
+                    if next_statement_idx < self.entry_point as u64 {
+                        return Err(SegmentationError::JumpOutsideFunction(StatementIdx(idx as u64)));
                     }
-                    if next_statement_idx > self.max_jump_in_function {
-                        self.max_jump_in_function = next_statement_idx;
+                    if next_statement_idx > self.max_jump_in_function as u64 {
+                        self.max_jump_in_function = next_statement_idx as usize;
                         self.max_jump_in_function_src = idx;
                     }
                 }

@@ -109,7 +109,7 @@ ConcreteTypeId: ConcreteTypeId = {
 ConcreteTypeIds = Comma<ConcreteTypeId>;
 
 StatementIdx: StatementIdx = {
-     <id:UnsignedInt> => StatementIdx(id as usize),
+     <id:UnsignedInt> => StatementIdx(id),
 }
 
 GenericArg: GenericArg = {

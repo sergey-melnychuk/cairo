@@ -166,7 +166,7 @@ impl<'a, TokenUsages: Fn(StatementIdx, CostTokenType) -> usize>
     fn known_ap_change_topological_order(&self) -> Result<Vec<StatementIdx>, ApChangeError> {
         get_topological_ordering(
             false,
-            (0..self.program.statements.len()).map(StatementIdx),
+            (0..self.program.statements.len()).map(|x| StatementIdx(x as u64)),
             self.program.statements.len(),
             |idx| {
                 let mut res = vec![];
@@ -188,7 +188,7 @@ impl<'a, TokenUsages: Fn(StatementIdx, CostTokenType) -> usize>
     fn tracked_ap_change_topological_order(&self) -> Result<Vec<StatementIdx>, ApChangeError> {
         get_topological_ordering(
             false,
-            (0..self.program.statements.len()).map(StatementIdx),
+            (0..self.program.statements.len()).map(|x| StatementIdx(x as u64)),
             self.program.statements.len(),
             |idx| {
                 Ok(self

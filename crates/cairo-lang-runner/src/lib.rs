@@ -358,7 +358,7 @@ impl SierraCasmRunner {
 
             *sierra_statement_weights.entry(sierra_statement_idx).or_insert(0) += 1;
 
-            let Some(gen_statement) = self.sierra_program.statements.get(sierra_statement_idx.0)
+            let Some(gen_statement) = self.sierra_program.statements.get(sierra_statement_idx.0 as usize)
             else {
                 panic!("Failed fetching statement index {}", sierra_statement_idx.0);
             };
@@ -399,7 +399,7 @@ impl SierraCasmRunner {
         }
 
         // Remove the footer.
-        sierra_statement_weights.remove(&StatementIdx(sierra_len));
+        sierra_statement_weights.remove(&StatementIdx(sierra_len as u64));
 
         ProfilingInfo { sierra_statement_weights, stack_trace_weights }
     }
@@ -412,7 +412,7 @@ impl SierraCasmRunner {
             self.casm_program
                 .debug_info
                 .sierra_statement_info
-                .partition_point(|x| x.start_offset <= pc)
+                .partition_point(|x| x.start_offset <= pc) as u64
                 - 1,
         )
     }
@@ -716,7 +716,7 @@ impl SierraCasmRunner {
 
         let entry_point = func.entry_point.0;
         let code_offset =
-            self.casm_program.debug_info.sierra_statement_info[entry_point].start_offset;
+            self.casm_program.debug_info.sierra_statement_info[entry_point as usize].start_offset;
 
         Self::create_entry_code_from_params(&params, args, initial_gas, code_offset)
     }

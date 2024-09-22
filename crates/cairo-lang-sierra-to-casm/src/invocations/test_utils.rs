@@ -292,7 +292,7 @@ pub fn compile_libfunc(libfunc: &str, refs: Vec<ReferenceExpression>) -> Reduced
                         target: if libfunc.fallthrough() == Some(i) {
                             BranchTarget::Fallthrough
                         } else {
-                            BranchTarget::Statement(StatementIdx(i))
+                            BranchTarget::Statement(StatementIdx(i as u64))
                         },
                         results: (0..branch.vars.len() as u64).map(VarId::new).collect(),
                     })

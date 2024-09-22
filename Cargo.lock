@@ -997,7 +997,6 @@ dependencies = [
  "test-case",
  "test-log",
  "thiserror",
- "web-sys",
 ]
 
 [[package]]

@@ -501,7 +501,7 @@ impl<'a> ProfilingInfoProcessor<'a> {
     ) -> GenStatement<StatementIdx> {
         self.sierra_program
             .statements
-            .get(statement_idx.0)
+            .get(statement_idx.0 as usize)
             .unwrap_or_else(|| panic!("Failed fetching statement index {}", statement_idx.0))
             .clone()
     }

@@ -71,7 +71,7 @@ pub fn generate_equations<
             },
         )?;
     }
-    for idx in (0..program.statements.len()).map(StatementIdx) {
+    for idx in (0..program.statements.len()).map(|x| StatementIdx(x as u64)) {
         let base_info = generator.get_info(&idx)?;
         match &program.get_statement(&idx).unwrap() {
             cairo_lang_sierra::program::Statement::Return(_) => {
@@ -164,7 +164,7 @@ impl EquationGenerator {
         info: StatementInfo,
     ) -> Result<(), ApChangeError> {
         let entry =
-            self.statement_info.get_mut(idx.0).ok_or(ApChangeError::StatementOutOfBounds(*idx))?;
+            self.statement_info.get_mut(idx.0 as usize).ok_or(ApChangeError::StatementOutOfBounds(*idx))?;
         if let Some(other) = entry {
             if other.past_locals != info.past_locals {
                 return Err(ApChangeError::BadMergeAllocatedLocalsMismatch(*idx));
@@ -184,6 +184,6 @@ impl EquationGenerator {
     /// Returns `StatementInfo` for statement, will additionally make sure this information was
     /// initialized.
     fn get_info(&mut self, idx: &StatementIdx) -> Result<StatementInfo, ApChangeError> {
-        self.statement_info[idx.0].clone().ok_or(ApChangeError::StatementOutOfOrder(*idx))
+        self.statement_info[idx.0 as usize].clone().ok_or(ApChangeError::StatementOutOfOrder(*idx))
     }
 }
